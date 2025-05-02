@@ -24,7 +24,6 @@ export default function PlayerForm() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState(initialFormState)
-  const [positionValue, setPositionValue] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -32,7 +31,6 @@ export default function PlayerForm() {
   }
 
   const handlePositionChange = (value: string) => {
-    setPositionValue(value)
     setFormData((prev) => ({ ...prev, position: value }))
   }
 
@@ -44,14 +42,13 @@ export default function PlayerForm() {
       // Create FormData object manually
       const formDataObj = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
-        formDataObj.append(key, value)
+        if (value) formDataObj.append(key, value)
       })
 
       await addPlayer(formDataObj)
 
       // Reset form by setting state back to initial values
       setFormData(initialFormState)
-      setPositionValue("")
 
       router.refresh()
     } catch (error) {
@@ -112,7 +109,7 @@ export default function PlayerForm() {
           <Label htmlFor="position" className="text-black">
             Posición
           </Label>
-          <Select name="position" value={positionValue} onValueChange={handlePositionChange} required>
+          <Select name="position" value={formData.position} onValueChange={handlePositionChange} required>
             <SelectTrigger className="border-black">
               <SelectValue placeholder="Seleccionar posición" />
             </SelectTrigger>
