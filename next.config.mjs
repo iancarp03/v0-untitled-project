@@ -11,7 +11,8 @@ const nextConfig = {
     domains: ['i.imgur.com', 'imgur.com', 'res.cloudinary.com'],
     unoptimized: true,
   },
-  // Eliminamos la configuración de redirects que estaba causando el error
+  // Asegurarse de que la aplicación se despliegue correctamente
+  output: 'standalone',
 };
 
 export default nextConfig;
