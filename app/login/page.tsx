@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/lib/auth"
+import Link from "next/link"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -38,8 +39,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg border-2 border-black">
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white/90 rounded-lg shadow-lg border-2 border-black">
         <div className="flex flex-col items-center">
           <div className="relative w-24 h-24 mb-4">
             <Image src="/images/club-shield.png" alt="Club Deportivo Liceo Shield" fill className="object-contain" />
@@ -69,6 +70,12 @@ export default function LoginPage() {
             {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </Button>
         </form>
+
+        <div className="text-center mt-4">
+          <Link href="/" className="text-sm text-gray-600 hover:text-black">
+            Volver a la página principal
+          </Link>
+        </div>
       </div>
     </div>
   )

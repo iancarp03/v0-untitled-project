@@ -4,7 +4,7 @@ import { Instagram, Phone } from "lucide-react"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen">
       <header className="bg-black text-white py-4 border-b-4 border-red-600">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -15,6 +15,7 @@ export default function Home() {
                 width={64}
                 height={64}
                 className="object-contain"
+                priority
               />
             </div>
             <h1 className="text-3xl font-bold">Club Deportivo Liceo</h1>
@@ -28,6 +29,7 @@ export default function Home() {
                 height={64}
                 className="object-contain"
                 priority
+                unoptimized
               />
             </div>
             <div className="flex space-x-4">
@@ -52,7 +54,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="py-20 bg-gradient-to-b from-gray-100 to-white">
+      <section className="py-20 bg-gradient-to-b from-gray-100/80 to-white/80">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6 text-black">Club Deportivo Liceo</h2>
           <p className="text-xl mb-10 max-w-2xl mx-auto text-gray-700">
@@ -62,13 +64,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl border-2 border-black">
+            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl border-2 border-black bg-white/90">
               <Image src="/images/club-shield.png" alt="Club Deportivo Liceo" fill className="object-contain" />
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 bg-white/90 p-6 rounded-lg shadow-lg border-2 border-black">
               <h2 className="text-3xl font-bold text-black">Nuestra Historia</h2>
               <p className="text-gray-700">
                 El Club Deportivo Liceo fue fundado el 3 de noviembre de 2019 con la misión de formar jugadores con
@@ -85,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-black text-white">
+      <section className="py-16 bg-black/90 text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">¿Querés probarte en nuestro club?</h2>
@@ -93,7 +95,7 @@ export default function Home() {
               Tenemos lugar para jugadores en todas las categorías, tanto para AFA como para ligas locales. ¡No pierdas
               la oportunidad de formar parte de nuestra familia!
             </p>
-            <div className="bg-red-600 p-6 rounded-lg inline-block">
+            <div className="bg-red-600 p-6 rounded-lg inline-block shadow-lg">
               <p className="text-2xl font-bold mb-2">Contactanos</p>
               <p className="text-xl mb-4">WhatsApp: 11-2670-0138</p>
               <a
@@ -109,7 +111,49 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-black text-white py-8 border-t-4 border-red-600">
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">Galería de Fotos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Estas son imágenes de ejemplo. En una implementación real, estas vendrían de la base de datos */}
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg border-2 border-black">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+              <Image
+                src="https://i.imgur.com/JZgVXYA.png"
+                alt="Equipo de fútbol"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+              <div className="absolute bottom-0 left-0 p-4 z-20">
+                <h3 className="text-white font-bold">Entrenamiento</h3>
+              </div>
+            </div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg border-2 border-black">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+              <Image src="https://i.imgur.com/JZgVXYA.png" alt="Partido" fill className="object-cover" unoptimized />
+              <div className="absolute bottom-0 left-0 p-4 z-20">
+                <h3 className="text-white font-bold">Partido</h3>
+              </div>
+            </div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg border-2 border-black">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+              <Image
+                src="https://i.imgur.com/JZgVXYA.png"
+                alt="Celebración"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+              <div className="absolute bottom-0 left-0 p-4 z-20">
+                <h3 className="text-white font-bold">Celebración</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-black/95 text-white py-8 border-t-4 border-red-600">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
