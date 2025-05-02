@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirigir a dashboard si ya está autenticado e intenta acceder a login
-  if (request.nextUrl.pathname === "/login" && isAuthenticated) {
+  if ((request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/admin-access") && isAuthenticated) {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: ["/dashboard/:path*", "/login", "/admin-access"],
 }
