@@ -11,22 +11,7 @@ const nextConfig = {
     domains: ['i.imgur.com', 'imgur.com', 'res.cloudinary.com'],
     unoptimized: true,
   },
-  // Añadir configuración para manejar errores 404
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        destination: '/not-found',
-        permanent: false,
-        missing: [
-          {
-            type: 'page',
-            value: 'not-found',
-          },
-        ],
-      },
-    ]
-  },
+  // Eliminamos la configuración de redirects que estaba causando el error
 };
 
 export default nextConfig;
