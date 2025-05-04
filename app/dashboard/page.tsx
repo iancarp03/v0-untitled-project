@@ -7,12 +7,13 @@ import SlidePanel from "@/components/slide-panel"
 import Image from "next/image"
 import { getSession, logout } from "@/lib/auth"
 import { Button } from "@/components/ui/button"
-import { LogOut } from "lucide-react"
+import { LogOut, Users, Settings, Home } from "lucide-react"
 import { redirect } from "next/navigation"
 import PhotoForm from "@/components/photo-form"
 import PhotoList from "@/components/photo-list"
 import PostForm from "@/components/post-form"
 import PostList from "@/components/post-list"
+import Link from "next/link"
 
 export default async function Dashboard() {
   const session = await getSession()
@@ -23,7 +24,7 @@ export default async function Dashboard() {
 
   return (
     <main className="min-h-screen">
-      <header className="bg-black text-white py-4 border-b-4 border-red-600">
+      <header className="bg-black text-white py-4 border-b-4 border-red-600 sticky top-0 z-50">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative w-16 h-16">
@@ -38,7 +39,11 @@ export default async function Dashboard() {
             </div>
             <h1 className="text-3xl font-bold">Club Deportivo Liceo</h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="text-white hover:text-red-200 flex items-center gap-2">
+              <Home className="w-5 h-5" />
+              <span className="hidden md:inline">Inicio</span>
+            </Link>
             <div className="relative w-16 h-16">
               <Image
                 src="/images/afa-shield.png"
@@ -47,7 +52,6 @@ export default async function Dashboard() {
                 height={64}
                 className="object-contain"
                 priority
-                unoptimized
               />
             </div>
             <form action={logout}>
@@ -62,9 +66,15 @@ export default async function Dashboard() {
 
       <div className="container py-8 px-4">
         <div className="flex items-center justify-between mb-8 bg-white/90 p-4 rounded-lg shadow-md border-2 border-black">
-          <h2 className="text-2xl font-bold text-black">Panel de Administración</h2>
-          <div className="text-sm text-gray-600">
-            Bienvenido, <span className="font-semibold">{session.name}</span>
+          <div className="flex items-center gap-3">
+            <Users className="h-8 w-8 text-red-600" />
+            <h2 className="text-2xl font-bold text-black">Panel de Administración</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <Settings className="h-5 w-5 text-gray-600" />
+            <div className="text-sm text-gray-600">
+              Bienvenido, <span className="font-semibold">{session.name}</span>
+            </div>
           </div>
         </div>
 

@@ -8,7 +8,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['i.imgur.com', 'imgur.com', 'res.cloudinary.com'],
+    domains: ['i.imgur.com', 'imgur.com', 'res.cloudinary.com', 'v0.blob.com'],
     unoptimized: true,
   },
   // Asegurarse de que la aplicación se despliegue correctamente

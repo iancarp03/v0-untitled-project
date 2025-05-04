@@ -10,7 +10,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-image: url("/images/soccer-background.png");
+  background-image: url("/images/background.jpg");
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
@@ -40,4 +40,42 @@ body::before {
 .card,
 .border-2 {
   backdrop-filter: blur(5px);
+}
+
+/* Mejoras visuales */
+.shadow-custom {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Estilos para los botones */
+.btn-primary {
+  @apply bg-black text-white px-6 py-3 rounded-lg font-bold border-2 border-red-600 hover:bg-black/80 transition-all;
+}
+
+.btn-secondary {
+  @apply bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-all;
 }

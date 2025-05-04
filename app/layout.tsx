@@ -2,6 +2,7 @@ import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import { MessageTemplateProvider } from "@/hooks/use-message-template"
+import LocalStorageProvider from "@/components/local-storage-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
+        <LocalStorageProvider />
         <MessageTemplateProvider>{children}</MessageTemplateProvider>
       </body>
     </html>

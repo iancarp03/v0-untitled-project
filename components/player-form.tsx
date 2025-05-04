@@ -45,12 +45,27 @@ export default function PlayerForm() {
         if (value) formDataObj.append(key, value)
       })
 
-      await addPlayer(formDataObj)
+      const result = await addPlayer(formDataObj)
 
-      // Reset form by setting state back to initial values
-      setFormData(initialFormState)
+      if (result.success) {
+        // Guardar en localStorage
+        const storedPlayers = localStorage.getItem("players")
+        const currentPlayers = storedPlayers ? JSON.parse(storedPlayers) : []
 
-      router.refresh()
+        const newPlayer = {
+          id: Date.now().toString(),
+          ...formData,
+          createdAt: new Date().toISOString(),
+          messageSent: false,
+        }
+
+        localStorage.setItem("players", JSON.stringify([...currentPlayers, newPlayer]))
+
+        // Reset form by setting state back to initial values
+        setFormData(initialFormState)
+
+        router.refresh()
+      }
     } catch (error) {
       console.error("Error al guardar el jugador:", error)
     } finally {

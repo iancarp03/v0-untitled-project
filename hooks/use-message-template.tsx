@@ -17,13 +17,23 @@ const MessageTemplateContext = createContext<MessageTemplateContextType>({
 })
 
 export function MessageTemplateProvider({ children }: { children: ReactNode }) {
-  const [messageTemplate, setMessageTemplate] = useState(defaultTemplate)
+  const [messageTemplate, setMessageTemplateState] = useState(defaultTemplate)
 
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
-        const template = await getMessageTemplate()
-        setMessageTemplate(template.template)
+        // Intentar cargar desde localStorage
+        const storedTemplate = localStorage.getItem("messageTemplate")
+        if (storedTemplate) {
+          const parsedTemplate = JSON.parse(storedTemplate)
+          setMessageTemplateState(parsedTemplate.template || defaultTemplate)
+        } else {
+          // Si no hay en localStorage, usar el de la API
+          const template = await getMessageTemplate()
+          setMessageTemplateState(template.template)
+          // Guardar en localStorage
+          localStorage.setItem("messageTemplate", JSON.stringify({ template: template.template }))
+        }
       } catch (error) {
         console.error("Error fetching message template:", error)
       }
@@ -31,6 +41,12 @@ export function MessageTemplateProvider({ children }: { children: ReactNode }) {
 
     fetchTemplate()
   }, [])
+
+  const setMessageTemplate = (template: string) => {
+    setMessageTemplateState(template)
+    // Guardar en localStorage
+    localStorage.setItem("messageTemplate", JSON.stringify({ template }))
+  }
 
   return (
     <MessageTemplateContext.Provider value={{ messageTemplate, setMessageTemplate }}>

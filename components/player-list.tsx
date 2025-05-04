@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getPlayers, markMessageSent, getFeeByCategory } from "@/lib/player-actions"
+import { getFeeByCategory } from "@/lib/player-actions"
 import { MessageSquare, Check } from "lucide-react"
 import type { Player } from "@/lib/types"
 import { useMessageTemplate } from "@/hooks/use-message-template"
@@ -17,12 +17,40 @@ export default function PlayerList() {
   useEffect(() => {
     const loadPlayers = async () => {
       setLoading(true)
-      const data = await getPlayers()
-      setPlayers(data)
-      setLoading(false)
+      try {
+        // Cargar desde localStorage
+        const storedPlayers = localStorage.getItem("players")
+        if (storedPlayers) {
+          const parsedPlayers = JSON.parse(storedPlayers)
+          setPlayers(
+            parsedPlayers.sort(
+              (a: Player, b: Player) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            ),
+          )
+        } else {
+          setPlayers([])
+        }
+      } catch (error) {
+        console.error("Error loading players:", error)
+        setPlayers([])
+      } finally {
+        setLoading(false)
+      }
     }
 
     loadPlayers()
+
+    // Agregar un event listener para actualizar la lista cuando cambie el localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "players") {
+        loadPlayers()
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+    }
   }, [])
 
   const getPositionColor = (position: string) => {
@@ -74,14 +102,18 @@ export default function PlayerList() {
 
     if (phoneNumber) {
       window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank")
-      await markMessageSent(player.id)
 
       // Update local state to reflect the change
-      setPlayers(
-        players.map((p) =>
-          p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
-        ),
+      const updatedPlayers = players.map((p) =>
+        p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
       )
+      setPlayers(updatedPlayers)
+
+      // Actualizar localStorage
+      localStorage.setItem("players", JSON.stringify(updatedPlayers))
+
+      // Disparar un evento de storage para que otros componentes se actualicen
+      window.dispatchEvent(new Event("storage"))
     } else {
       alert("No hay número de teléfono registrado para este jugador.")
     }

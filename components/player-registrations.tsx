@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getPlayersByDate, getPlayersByCategory, markMessageSent, getFeeByCategory } from "@/lib/player-actions"
+import { getFeeByCategory } from "@/lib/player-actions"
 import { MessageSquare, Download, Check } from "lucide-react"
 import type { Player, PlayersByDate, PlayersByCategory } from "@/lib/types"
 import { useMessageTemplate } from "@/hooks/use-message-template"
@@ -21,14 +21,59 @@ export default function PlayerRegistrations() {
   useEffect(() => {
     const loadPlayers = async () => {
       setLoading(true)
-      const dateData = await getPlayersByDate()
-      const categoryData = await getPlayersByCategory()
-      setPlayersByDate(dateData)
-      setPlayersByCategory(categoryData)
-      setLoading(false)
+      try {
+        // Cargar desde localStorage
+        const storedPlayers = localStorage.getItem("players")
+        if (storedPlayers) {
+          const players: Player[] = JSON.parse(storedPlayers)
+
+          // Group by date
+          const byDate: PlayersByDate = {}
+          players.forEach((player) => {
+            const date = new Date(player.createdAt).toISOString().split("T")[0]
+            if (!byDate[date]) {
+              byDate[date] = []
+            }
+            byDate[date].push(player)
+          })
+
+          // Group by category
+          const byCategory: PlayersByCategory = {}
+          players.forEach((player) => {
+            if (!byCategory[player.category]) {
+              byCategory[player.category] = []
+            }
+            byCategory[player.category].push(player)
+          })
+
+          setPlayersByDate(byDate)
+          setPlayersByCategory(byCategory)
+        } else {
+          setPlayersByDate({})
+          setPlayersByCategory({})
+        }
+      } catch (error) {
+        console.error("Error loading players:", error)
+        setPlayersByDate({})
+        setPlayersByCategory({})
+      } finally {
+        setLoading(false)
+      }
     }
 
     loadPlayers()
+
+    // Agregar un event listener para actualizar la lista cuando cambie el localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "players") {
+        loadPlayers()
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+    }
   }, [])
 
   const getPositionColor = (position: string) => {
@@ -80,25 +125,41 @@ export default function PlayerRegistrations() {
 
     if (phoneNumber) {
       window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank")
-      await markMessageSent(player.id)
 
-      // Update local state to reflect the change
-      if (activeView === "date") {
-        const updatedPlayersByDate = { ...playersByDate }
-        Object.keys(updatedPlayersByDate).forEach((date) => {
-          updatedPlayersByDate[date] = updatedPlayersByDate[date].map((p) =>
-            p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
-          )
-        })
-        setPlayersByDate(updatedPlayersByDate)
-      } else {
-        const updatedPlayersByCategory = { ...playersByCategory }
-        Object.keys(updatedPlayersByCategory).forEach((category) => {
-          updatedPlayersByCategory[category] = updatedPlayersByCategory[category].map((p) =>
-            p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
-          )
-        })
-        setPlayersByCategory(updatedPlayersByCategory)
+      // Cargar jugadores actuales
+      const storedPlayers = localStorage.getItem("players")
+      if (storedPlayers) {
+        const players: Player[] = JSON.parse(storedPlayers)
+
+        // Actualizar el jugador
+        const updatedPlayers = players.map((p) =>
+          p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
+        )
+
+        // Guardar en localStorage
+        localStorage.setItem("players", JSON.stringify(updatedPlayers))
+
+        // Actualizar la vista
+        if (activeView === "date") {
+          const updatedPlayersByDate = { ...playersByDate }
+          Object.keys(updatedPlayersByDate).forEach((date) => {
+            updatedPlayersByDate[date] = updatedPlayersByDate[date].map((p) =>
+              p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
+            )
+          })
+          setPlayersByDate(updatedPlayersByDate)
+        } else {
+          const updatedPlayersByCategory = { ...playersByCategory }
+          Object.keys(updatedPlayersByCategory).forEach((category) => {
+            updatedPlayersByCategory[category] = updatedPlayersByCategory[category].map((p) =>
+              p.id === player.id ? { ...p, messageSent: true, messageDate: new Date().toISOString() } : p,
+            )
+          })
+          setPlayersByCategory(updatedPlayersByCategory)
+        }
+
+        // Disparar un evento de storage para que otros componentes se actualicen
+        window.dispatchEvent(new Event("storage"))
       }
     } else {
       alert("No hay número de teléfono registrado para este jugador.")

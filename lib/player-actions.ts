@@ -3,9 +3,6 @@
 import { revalidatePath } from "next/cache"
 import type { Player, PlayersByDate, PlayersByCategory, MessageTemplate } from "./types"
 
-// Simulated database - in a real app, you would use a database
-const players: Player[] = []
-
 // Default message template
 const messageTemplate: MessageTemplate = {
   template:
@@ -34,76 +31,34 @@ export async function addPlayer(formData: FormData) {
     messageSent: false,
   }
 
-  players.push(newPlayer)
   revalidatePath("/")
 
-  return { success: true }
+  return { success: true, player: newPlayer }
 }
 
 export async function getPlayers(): Promise<Player[]> {
   // Simulate a delay to mimic a database call
   await new Promise((resolve) => setTimeout(resolve, 500))
 
-  // Return a copy of the players array sorted by creation date (newest first)
-  return [...players].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  return []
 }
 
 export async function getPlayersByDate(): Promise<PlayersByDate> {
   // Simulate a delay to mimic a database call
   await new Promise((resolve) => setTimeout(resolve, 500))
 
-  // Group players by date (YYYY-MM-DD)
-  const playersByDate: PlayersByDate = {}
-
-  players.forEach((player) => {
-    const date = new Date(player.createdAt).toISOString().split("T")[0]
-    if (!playersByDate[date]) {
-      playersByDate[date] = []
-    }
-    playersByDate[date].push(player)
-  })
-
-  // Sort players within each date by creation time
-  Object.keys(playersByDate).forEach((date) => {
-    playersByDate[date].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-  })
-
-  return playersByDate
+  return {}
 }
 
 export async function getPlayersByCategory(): Promise<PlayersByCategory> {
   // Simulate a delay to mimic a database call
   await new Promise((resolve) => setTimeout(resolve, 500))
 
-  // Group players by category
-  const playersByCategory: PlayersByCategory = {}
-
-  players.forEach((player) => {
-    if (!playersByCategory[player.category]) {
-      playersByCategory[player.category] = []
-    }
-    playersByCategory[player.category].push(player)
-  })
-
-  // Sort players within each category by name
-  Object.keys(playersByCategory).forEach((category) => {
-    playersByCategory[category].sort((a, b) => a.lastName.localeCompare(b.lastName))
-  })
-
-  return playersByCategory
+  return {}
 }
 
 export async function markMessageSent(playerId: string): Promise<{ success: boolean }> {
-  const playerIndex = players.findIndex((p) => p.id === playerId)
-
-  if (playerIndex !== -1) {
-    players[playerIndex].messageSent = true
-    players[playerIndex].messageDate = new Date().toISOString()
-    revalidatePath("/")
-    return { success: true }
-  }
-
-  return { success: false }
+  return { success: true }
 }
 
 export async function getMessageTemplate(): Promise<MessageTemplate> {

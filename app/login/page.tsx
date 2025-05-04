@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/lib/auth"
 import Link from "next/link"
+import { Lock, User, ArrowLeft } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -42,7 +43,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-md p-8 space-y-8 bg-white/90 rounded-lg shadow-lg border-2 border-black">
         <div className="flex flex-col items-center">
-          <div className="relative w-24 h-24 mb-4">
+          <div className="relative w-28 h-28 mb-4">
             <Image src="/images/club-shield.png" alt="Club Deportivo Liceo Shield" fill className="object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-center">Club Deportivo Liceo</h1>
@@ -53,12 +54,16 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="username">Usuario</Label>
+            <Label htmlFor="username" className="flex items-center gap-2">
+              <User className="h-4 w-4" /> Usuario
+            </Label>
             <Input id="username" name="username" type="text" required className="border-black" />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
+            <Label htmlFor="password" className="flex items-center gap-2">
+              <Lock className="h-4 w-4" /> Contraseña
+            </Label>
             <Input id="password" name="password" type="password" required className="border-black" />
           </div>
 
@@ -72,8 +77,8 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center mt-4">
-          <Link href="/" className="text-sm text-gray-600 hover:text-black">
-            Volver a la página principal
+          <Link href="/" className="text-sm text-gray-600 hover:text-black flex items-center justify-center gap-1">
+            <ArrowLeft className="h-4 w-4" /> Volver a la página principal
           </Link>
         </div>
       </div>
