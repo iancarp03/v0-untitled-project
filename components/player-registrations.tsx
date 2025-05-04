@@ -24,30 +24,38 @@ export default function PlayerRegistrations() {
       try {
         // Cargar desde localStorage
         const storedPlayers = localStorage.getItem("players")
+        console.log("Stored players for registrations:", storedPlayers)
+
         if (storedPlayers) {
-          const players: Player[] = JSON.parse(storedPlayers)
+          try {
+            const players: Player[] = JSON.parse(storedPlayers)
 
-          // Group by date
-          const byDate: PlayersByDate = {}
-          players.forEach((player) => {
-            const date = new Date(player.createdAt).toISOString().split("T")[0]
-            if (!byDate[date]) {
-              byDate[date] = []
-            }
-            byDate[date].push(player)
-          })
+            // Group by date
+            const byDate: PlayersByDate = {}
+            players.forEach((player) => {
+              const date = new Date(player.createdAt).toISOString().split("T")[0]
+              if (!byDate[date]) {
+                byDate[date] = []
+              }
+              byDate[date].push(player)
+            })
 
-          // Group by category
-          const byCategory: PlayersByCategory = {}
-          players.forEach((player) => {
-            if (!byCategory[player.category]) {
-              byCategory[player.category] = []
-            }
-            byCategory[player.category].push(player)
-          })
+            // Group by category
+            const byCategory: PlayersByCategory = {}
+            players.forEach((player) => {
+              if (!byCategory[player.category]) {
+                byCategory[player.category] = []
+              }
+              byCategory[player.category].push(player)
+            })
 
-          setPlayersByDate(byDate)
-          setPlayersByCategory(byCategory)
+            setPlayersByDate(byDate)
+            setPlayersByCategory(byCategory)
+          } catch (parseError) {
+            console.error("Error parsing players for registrations:", parseError)
+            setPlayersByDate({})
+            setPlayersByCategory({})
+          }
         } else {
           setPlayersByDate({})
           setPlayersByCategory({})
@@ -64,10 +72,8 @@ export default function PlayerRegistrations() {
     loadPlayers()
 
     // Agregar un event listener para actualizar la lista cuando cambie el localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "players") {
-        loadPlayers()
-      }
+    const handleStorageChange = () => {
+      loadPlayers()
     }
 
     window.addEventListener("storage", handleStorageChange)

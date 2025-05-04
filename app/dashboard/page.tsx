@@ -14,6 +14,7 @@ import PhotoList from "@/components/photo-list"
 import PostForm from "@/components/post-form"
 import PostList from "@/components/post-list"
 import Link from "next/link"
+import DataBackup from "@/components/data-backup"
 
 export default async function Dashboard() {
   const session = await getSession()
@@ -168,6 +169,10 @@ export default async function Dashboard() {
 
       <SlidePanel title="Plantilla de Mensaje" side="left">
         <MessageTemplateEditor />
+      </SlidePanel>
+
+      <SlidePanel title="Respaldo de Datos" side="right">
+        <DataBackup />
       </SlidePanel>
 
       <footer className="bg-black/95 text-white py-4 border-t-4 border-red-600 mt-8">

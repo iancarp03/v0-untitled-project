@@ -64,7 +64,13 @@ export default function PlayerForm() {
         // Reset form by setting state back to initial values
         setFormData(initialFormState)
 
-        router.refresh()
+        // Forzar actualización de la lista
+        window.dispatchEvent(new Event("storage"))
+
+        // Recargar la página para asegurar que se muestren los datos
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       }
     } catch (error) {
       console.error("Error al guardar el jugador:", error)

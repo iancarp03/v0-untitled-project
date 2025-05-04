@@ -20,13 +20,20 @@ export default function PlayerList() {
       try {
         // Cargar desde localStorage
         const storedPlayers = localStorage.getItem("players")
+        console.log("Stored players:", storedPlayers)
+
         if (storedPlayers) {
-          const parsedPlayers = JSON.parse(storedPlayers)
-          setPlayers(
-            parsedPlayers.sort(
-              (a: Player, b: Player) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-            ),
-          )
+          try {
+            const parsedPlayers = JSON.parse(storedPlayers)
+            setPlayers(
+              parsedPlayers.sort(
+                (a: Player, b: Player) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+              ),
+            )
+          } catch (parseError) {
+            console.error("Error parsing players:", parseError)
+            setPlayers([])
+          }
         } else {
           setPlayers([])
         }
@@ -41,10 +48,8 @@ export default function PlayerList() {
     loadPlayers()
 
     // Agregar un event listener para actualizar la lista cuando cambie el localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "players") {
-        loadPlayers()
-      }
+    const handleStorageChange = () => {
+      loadPlayers()
     }
 
     window.addEventListener("storage", handleStorageChange)
