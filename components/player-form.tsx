@@ -45,10 +45,11 @@ export default function PlayerForm() {
         if (value) formDataObj.append(key, value)
       })
 
-      const result = await addPlayer(formDataObj)
+      // Llamar a la función del servidor (esto es principalmente para mantener la estructura)
+      await addPlayer(formDataObj)
 
-      if (result.success) {
-        // Guardar en localStorage
+      // Guardar en localStorage
+      try {
         const storedPlayers = localStorage.getItem("players")
         const currentPlayers = storedPlayers ? JSON.parse(storedPlayers) : []
 
@@ -59,21 +60,24 @@ export default function PlayerForm() {
           messageSent: false,
         }
 
+        // Guardar el array actualizado
         localStorage.setItem("players", JSON.stringify([...currentPlayers, newPlayer]))
 
-        // Reset form by setting state back to initial values
+        // Resetear el formulario
         setFormData(initialFormState)
 
-        // Forzar actualización de la lista
+        // Disparar evento para actualizar otros componentes
         window.dispatchEvent(new Event("storage"))
 
-        // Recargar la página para asegurar que se muestren los datos
-        setTimeout(() => {
-          window.location.reload()
-        }, 500)
+        // Mostrar mensaje de éxito o redirigir
+        alert("Jugador registrado con éxito")
+      } catch (storageError) {
+        console.error("Error al guardar en localStorage:", storageError)
+        alert("Error al guardar los datos localmente. Verifica que tu navegador permita almacenamiento local.")
       }
     } catch (error) {
       console.error("Error al guardar el jugador:", error)
+      alert("Error al procesar el formulario. Por favor, intenta nuevamente.")
     } finally {
       setIsSubmitting(false)
     }

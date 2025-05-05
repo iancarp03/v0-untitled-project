@@ -25,11 +25,16 @@ export default function PlayerList() {
         if (storedPlayers) {
           try {
             const parsedPlayers = JSON.parse(storedPlayers)
-            setPlayers(
-              parsedPlayers.sort(
-                (a: Player, b: Player) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-              ),
-            )
+            if (Array.isArray(parsedPlayers)) {
+              setPlayers(
+                parsedPlayers.sort(
+                  (a: Player, b: Player) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+                ),
+              )
+            } else {
+              console.error("El formato de los datos almacenados no es un array:", parsedPlayers)
+              setPlayers([])
+            }
           } catch (parseError) {
             console.error("Error parsing players:", parseError)
             setPlayers([])

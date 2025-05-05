@@ -30,6 +30,14 @@ export default function PlayerRegistrations() {
           try {
             const players: Player[] = JSON.parse(storedPlayers)
 
+            if (!Array.isArray(players)) {
+              console.error("El formato de los datos almacenados no es un array:", players)
+              setPlayersByDate({})
+              setPlayersByCategory({})
+              setLoading(false)
+              return
+            }
+
             // Group by date
             const byDate: PlayersByDate = {}
             players.forEach((player) => {
